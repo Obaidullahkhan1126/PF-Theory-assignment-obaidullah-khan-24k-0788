@@ -1,1 +1,50 @@
+Q1:
+START
+DECLARE speed_kms,speed_mph:INTEGER
+PRINT("Enter speed in kilometer per second")
+INPUT speed_kms
+speed_mph = speed_kms*0.621371*3600
+PRINT("The speed in meter per second is",speed_mph)
+END
 
+Q2:
+START
+DECLARE pos_num :REAL
+PRINT("Enter a number greater than zero")
+INPUT pos_num
+IF pos_num =< 0
+THEN
+ PRINT("Invalid input")
+ELSE
+ IF pos_num % 2==0
+ THEN 
+  PRINT("Even")
+ ELSE 
+  PRINT("Odd")
+ ENDIF
+ENDIF
+END
+
+Q3:
+START
+DECLARE gender:BOOLEAN
+DECLARE age:INTEGER
+DECLARE province:STRING
+PRINT("Enter gender,age,province")
+IF province == sindh
+THEN
+ IF gender == M & age >= 18 || gender == F & age >=18
+ THEN
+  PRINT("Legal")
+ ELSE
+  PRINT("Illegal")
+ ENDIF
+ELSE
+ IF gender == M & age >= 18 || gender == F & age >=16
+ THEN
+  PRINT("Legal")
+ ELSE 
+  PRINT("Illegal")
+ ENDIF
+ENDIF
+END

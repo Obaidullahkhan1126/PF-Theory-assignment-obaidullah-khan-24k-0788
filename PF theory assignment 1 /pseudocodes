@@ -48,3 +48,108 @@ ELSE
  ENDIF
 ENDIF
 END
+
+Q4:
+START
+DECLARE a_anions,a_apricots,a_grapes,a_tomatoes:INTEGER
+DECLARE p_anions,p_apricots,p_grapes,p_tomatoes:INTEGER
+INPUT a_anions,a_apricots,a_grapes,a_tomatoes
+INPUT p_anions,p_apricots,p_grapes,p_tomatoes
+INPUT wallet
+bill = (a_anions*p_anions)+(a_apricots*p_apricots)+(a_tomatoes*p_tomatoes)+(a_grapes*p_grapes)
+IF bill > wallet THEN
+ PRINT("Not enough money")
+ELSE
+ change = wallet - bill
+ PRINT("Total bill")
+ PRINT("Your change:",change)
+END
+
+Q5:
+START
+INPUT crop:STRING
+INPUT moisture,rainfall:INTEGER
+IF crop == "wheat"
+THEN
+ IF moisture < 30 AND rainfall < 24
+ THEN
+  PRINT("Irrigation done")
+ ENDIF
+ELSEIF croptype == "corn" AND moisture <40
+THEN 
+ PRINT("Irrigation done")
+ELSEIF croptype == "rice" AND moisture < 25 AND rainfall <24
+THEN
+ PRINT("Irrigation done")
+ELSE
+ PRINT("No irrigation done")
+ENDIF
+END
+
+
+Q6:
+START
+INPUT age,height:INTEGER
+INPUT ride:STRING
+IF ride == "The dragon roller coaster" AND height >= 48 AND age>=10
+THEN
+ PRINT("You meet the criteria for the dragon roller coaster")
+ELSEIF ride =="The sky swing" AND height >=54 AND age >0 
+THEN 
+ PRINT("You meet the criteria for the sky swing")
+ELSEIF ride =="The carousel" AND height > 0 AND age >=5
+THEN
+ PRINT("You meet the criteria for the carousel")
+ELSE
+ PRINT("Sorry you do not meet the criteria for",ride)
+ENDIF
+END
+
+
+
+Q7:
+START
+DECLARE number:INTEGER
+digit = 0
+INPUT number
+IF number ==1111110
+THEN
+ digit = 0
+PRINT("Ground floor",digit)
+ELSEIF number == 0110000
+THEN
+ digit=1
+ PRINT("First floor",digit)
+ELSEIF number ==1101101
+THEN 
+ digit =2
+ PRINT("Second floor",digit)
+ELSEIF number ==1111001
+THEN
+ digit =3
+PRINT("Third floor",digit)
+ELSEIF number = 0110011
+THEN
+ digit= 4
+ PRINT("Fourth floor",digit)
+ELSEIF number ==1011011
+THEN
+ digit =5
+ PRINT("Fifth floor",digit)
+ELSEIF number ==1011111
+THEN
+ digit =6
+ PRINT("Sixth floor,digit)
+ELSEIF number ==1110000
+THEN digit =7
+ PRINT("Seventh floor",digit)
+ELSEIF number ==1111111
+THEN digit =8
+ PRINT("Eight floor",digit)
+ELSEIF number ==1111011
+THEN digit =9
+ PRINT("Ninth floor",digit)
+ELSE
+ PRINT("Invalid input")
+ENDIF
+END

@@ -153,3 +153,144 @@ ELSE
  PRINT("Invalid input")
 ENDIF
 END
+
+
+Q8:
+
+
+START
+DECLARE num =INTEGER
+INPUT num
+sum=0
+WHILE num<>0 DO
+ digit = num%10
+ sum=sum+digit
+ num=(num-digit)/10
+ENDWHILE
+PRINT sum
+END
+
+Q9:
+START
+DECLARE birth_day, birth_month, birth_year:INTEGER
+DECLARE current_day, current_month, current_year:INTEGER
+INPUT birth_day, birth_month, birth_year
+INPUT current_day, current_month, current_year
+INPUT leap_year
+If birth_month ==4 OR birth_month = 6 OR birth_ month== 9 OR
+birth_month== 11 THEN
+  IF birth_day <1 OR birth_day> 30 THEN
+    PRINT("Invalid dates") 
+  ELSE
+   day=current_day - birth_day
+   month= current_month - birth_month
+   year= current_year - birth_year
+  ENDIF
+ELSE
+  If birth_day <1 OR buth day >31 AND birth_month != 2 THEN
+   PRINT("Invalid dates")
+  ELSE
+   day=current_day - birth_day
+   month= current_month - birth_month
+   year= current_year - birth_year
+  ENDIF
+ENDIF
+IF leap_year = "yes" AND birth_month==2 THEN
+ IF birth_day < 1 OR birth_day >29 THEN
+  PRINT("Invalid dates")
+ ELSE
+   day=current_day - birth_day
+   month= current_month - birth_month
+   year= current_year - birth_year
+ ENDIF
+ELSE
+ IF birth_day <1 OR birth_day>28 THEN
+  PRINT("Invalid dates")
+ ELSE
+   day=current_day - birth_day
+   month= current_month - birth_month
+   year= current_year - birth_year
+ ENDIF
+ENDIF
+PRINT day
+PRINT month
+PRINT year
+END
+
+Q10:
+
+START 
+DECLARE num,new_num,place:INTEGER
+INPUT num
+new_num=0
+place=1
+WHILE num!=0 DO
+ IF num%100 ==90 THEN
+  digit = num%100
+  num=(num-digit)/100
+  new_num=new_num + ((digit/10)*place)
+ ELSE
+   digit = num%10
+  num=(num-digit)/10
+  new_num=new_num + (digit*place)
+ ENDIF
+ place=place*10
+ENDWHILE
+PRINT new_num
+
+
+Q11:
+START
+DECLARE
+INPUT numl, num2
+IF num1<0 OR num2<0 THEN
+ PRINT "Invalid Inputs"
+ELSE
+ WHILE num2!=0 DO
+  temp = num2
+  num2 numl % num2
+  num1 = temp
+ ENDWHILE
+ENDIF
+
+If num1 == 1 THEN
+ PRINT "Coprime"
+ELSE
+ PRINT "Not Coprime"
+ENDIF
+END
+
+
+Q12:
+START
+DECLARE 5ltr,3ltr,5l_jug,3l_jug:INTEGER
+5ltr =5
+3ltr=3
+5l_jug=0
+3l_jug=0
+5l_jug=5l_jug + 5ltr
+5l_jug=5l_jug - 3ltr
+3l_jug=3ltr
+3l_jug=0
+3l_jug= 3l_jug + 5l_jug
+5l_jug= 5l_jug + 5ltr
+3l_jug= 3l_jug + 1
+5l_jug= 5l_jug -1
+END
+
+
+
+Q13:
+START
+INPUT M //M>N
+INPUT N //M>N
+num1=M
+num 2=N
+WHILE num2 <>O DO
+ temp = num2
+ num2= num1 % num2
+ num1=temp
+ENDWHILE 
+FOR i =0 TO M STEP num1
+PRINT("Amount: ", i)
+END

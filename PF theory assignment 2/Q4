@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <string.h>
+
+void sortChars(char str[]) {
+    int len = strlen(str);
+    int x, y;
+    for (x = 0; x < len - 1; x++) {
+        for (y = x; y < len; y++) {
+            if (str[x] > str[y]) {
+                char temp = str[x];
+                str[x] = str[y];
+                str[y] = temp;
+            }
+        }
+    }
+}
+
+void categorizeEntries(char data[][100], int count) {
+    int marked[100] = {0};
+    char sortedData[100][100];
+    int a, b;
+    for (a = 0; a < count; a++) {
+        strcpy(sortedData[a], data[a]);
+        sortChars(sortedData[a]);
+    }
+    for (a = 0; a < count; a++) {
+        if (!marked[a]) {
+            printf("Group: %s", data[a]);
+            marked[a] = 1;
+            for (b = a + 1; b < count; b++) {
+                if (strcmp(sortedData[a], sortedData[b]) == 0) {
+                    printf(", %s", data[b]);
+                    marked[b] = 1;
+                }
+            }
+            printf("\n");
+        }
+    }
+}
+
+int main() {
+    char entries[10][100];
+    int total;
+
+    printf("Enter the number of entries: ");
+    scanf("%d", &total);
+    getchar();
+    printf("Input entries\n[ ");
+    int m, n;
+    for (m = 0; m < total; m++) {
+        if (m == total - 1) {
+            printf("Entry %d: ", m + 1);
+            fgets(entries[m], 100, stdin);
+            entries[m][strcspn(entries[m], "\n")] = 0;
+            printf("]\n");
+            break;
+        }
+        printf("Entry %d: ", m + 1);
+        fgets(entries[m], 100, stdin);
+        for (n = 0; entries[m][n] != '\0'; n++) {
+            if (entries[m][n] == '\n') {
+                entries[m][n] = '\0';
+                break;
+            }
+        }
+    }
+
+    categorizeEntries(entries, total);
+
+    return 0;

@@ -1,0 +1,94 @@
+#include <stdio.h>
+
+void displayGrid(char matrix[5][5]) {
+    int row, col;
+    for (row = 0; row < 5; row++) {
+        for (col = 0; col < 5; col++) {
+            printf("%c ", matrix[row][col]);
+        }
+        printf("\n");
+    }
+}
+
+void locatePlayer(char matrix[5][5], int *currentRow, int *currentCol) {
+    int row, col;
+    for (row = 0; row < 5; row++) {
+        for (col = 0; col < 5; col++) {
+            if (matrix[row][col] == 'P') {
+                *currentRow = row;
+                *currentCol = col;
+                return;
+            }
+        }
+    }
+}
+
+int validateMove(char matrix[5][5], int targetRow, int targetCol, int *itemCount) {
+    if (targetRow < 0 || targetRow >= 5 || targetCol < 0 || targetCol >= 5) {
+        printf("Invalid move.\n");
+        return 0;
+    }
+
+    if (matrix[targetRow][targetCol] == 'X') {
+        printf("Invalid move.\n");
+        return 0;
+    }
+
+    if (matrix[targetRow][targetCol] == 'I') {
+        (*itemCount)++;
+        printf("Item collected! Total items: %d\n", *itemCount);
+    }
+
+    return 1;
+}
+
+int main() {
+    char matrix[5][5] = {
+        {' ', ' ', 'I', 'X', ' '},
+        {' ', 'X', ' ', ' ', ' '},
+        {'I', ' ', 'X', 'X', ' '},
+        {' ', ' ', ' ', 'I', 'X'},
+        {' ', 'X', ' ', ' ', 'P'}
+    };
+
+    int currentRow, currentCol;
+    int itemCount = 0;
+    char direction;
+
+    locatePlayer(matrix, &currentRow, &currentCol);
+
+    while (1) {
+        displayGrid(matrix);
+        printf("Enter move ('W'=up, 'S'=down, 'A'=left, 'D'=right, 'Q'=quit): ");
+        scanf(" %c", &direction);
+
+        if (direction == 'Q') {
+            printf("Exiting game.\n");
+            break;
+        }
+
+        int targetRow = currentRow, targetCol = currentCol;
+
+        if (direction == 'W') {
+            targetRow--;
+        } else if (direction == 'S') {
+            targetRow++;
+        } else if (direction == 'A') {
+            targetCol--;
+        } else if (direction == 'D') {
+            targetCol++;
+        } else {
+            printf("Invalid input.\n");
+            continue;
+        }
+
+        if (validateMove(matrix, targetRow, targetCol, &itemCount)) {
+            matrix[currentRow][currentCol] = ' ';
+            matrix[targetRow][targetCol] = 'P';
+            currentRow = targetRow;
+            currentCol = targetCol;
+        }
+    }
+
+    return 0;
+}

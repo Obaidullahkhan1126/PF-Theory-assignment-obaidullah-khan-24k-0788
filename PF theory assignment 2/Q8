@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <string.h>
+
+int binToDec(int binaryNum);
+int decToBin(int decimalNum);
+void decToHex(int decimalNum);
+void hexToDec(char hexString[]);
+void binToHex(int binaryNum);
+void hexToBin(char hexString[]);
+
+int main() {
+    int choice, number;
+    char hexInput[20];
+
+    while (1) {
+        printf("1. Binary to Decimal\n");
+        printf("2. Decimal to Binary\n");
+        printf("3. Decimal to Hexadecimal\n");
+        printf("4. Hexadecimal to Decimal\n");
+        printf("5. Binary to Hexadecimal\n");
+        printf("6. Hexadecimal to Binary\n");
+        printf("7. Exit\n");
+        printf("Enter the type of conversion: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter a binary number: ");
+                scanf("%d", &number);
+                printf("Decimal Number: %d\n", binToDec(number));
+                break;
+            case 2:
+                printf("Enter a decimal number: ");
+                scanf("%d", &number);
+                printf("Binary Number: %d\n", decToBin(number));
+                break;
+            case 3:
+                printf("Enter a decimal number: ");
+                scanf("%d", &number);
+                decToHex(number);
+                break;
+            case 4:
+                printf("Enter a hexadecimal number: ");
+                scanf("%s", hexInput);
+                hexToDec(hexInput);
+                break;
+            case 5:
+                printf("Enter a binary number: ");
+                scanf("%d", &number);
+                binToHex(number);
+                break;
+            case 6:
+                printf("Enter a hexadecimal number: ");
+                scanf("%s", hexInput);
+                hexToBin(hexInput);
+                break;
+            case 7:
+                printf("Exiting the program.\n");
+                return 0;
+            default:
+                printf("Invalid input. Please try again.\n");
+        }
+    }
+    return 0;
+}
+
+int binToDec(int binaryNum) {
+    int decimal = 0, base = 1, digit;
+    while (binaryNum > 0) {
+        digit = binaryNum % 10;
+        binaryNum /= 10;
+        decimal += digit * base;
+        base *= 2;
+    }
+    return decimal;
+}
+
+int decToBin(int decimalNum) {
+    int binary = 0, base = 1;
+    while (decimalNum > 0) {
+        binary += (decimalNum % 2) * base;
+        decimalNum /= 2;
+        base *= 10;
+    }
+    return binary;
+}
+
+void decToHex(int decimalNum) {
+    char hex[20];
+    int index = 0;
+    while (decimalNum != 0) {
+        int temp = decimalNum % 16;
+        hex[index++] = temp < 10 ? temp + '0' : temp + 'A' - 10;
+        decimalNum /= 16;
+    }
+    hex[index] = '\0';
+    for (int i = 0; i < index / 2; i++) {
+        char temp = hex[i];
+        hex[i] = hex[index - i - 1];
+        hex[index - i - 1] = temp;
+    }
+    printf("Hexadecimal Number: %s\n", hex);
+}
+
+void hexToDec(char hexString[]) {
+    int decimal = 0, base = 1, length = strlen(hexString);
+    for (int i = length - 1; i >= 0; i--) {
+        if (hexString[i] >= '0' && hexString[i] <= '9') {
+            decimal += (hexString[i] - '0') * base;
+        } else if (hexString[i] >= 'A' && hexString[i] <= 'F') {
+            decimal += (hexString[i] - 'A' + 10) * base;
+        } else {
+            printf("Invalid input.\n");
+            return;
+        }
+        base *= 16;
+    }
+    printf("Decimal Number: %d\n", decimal);
+}
+
+void binToHex(int binaryNum) {
+    int decimal = binToDec(binaryNum);
+    decToHex(decimal);
+}
+
+void hexToBin(char hexString[]) {
+    int decimal = 0, base = 1, length = strlen(hexString);
+    for (int i = length - 1; i >= 0; i--) {
+        if (hexString[i] >= '0' && hexString[i] <= '9') {
+            decimal += (hexString[i] - '0') * base;
+        } else if (hexString[i] >= 'A' && hexString[i] <= 'F') {
+            decimal += (hexString[i] - 'A' + 10) * base;
+        } else {
+            printf("Invalid input.\n");
+            return;
+        }
+        base *= 16;
+    }
+    char binary[60];
+    int index = 0;
+    while (decimal > 0) {
+        binary[index++] = (decimal % 2) + '0';
+        decimal /= 2;
+    }
+    binary[index] = '\0';
+    for (int i = 0; i < index / 2; i++) {
+        char temp = binary[i];
+        binary[i] = binary[index - i - 1];
+        binary[index - i - 1] = temp;
+    }
+    printf("Binary Number: %s\n", binary);
+}

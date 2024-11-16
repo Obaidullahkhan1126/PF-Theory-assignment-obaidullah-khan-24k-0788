@@ -1,0 +1,26 @@
+#include<stdio.h>
+int main()
+{
+  int num;
+  printf("Enter the number of slogans to be used: ");
+  scanf("%d", &num);
+  getchar();
+  
+  char slogans[num][20];
+  printf("Enter your slogans: \n");
+  for(int i=0 ; i<num ; i++)
+     {printf("Slogan %d:\n", i+1);
+      fgets(slogans[i], 20, stdin);}
+  
+  for(int i=0 ; i<num ; i++)
+     {int freq[256]={0};
+      for(int j=0 ; slogans[i][j] != '\0' ; j++)
+         {if(slogans[i][j] >= 32 && slogans[i][j] < 256)
+            {freq[slogans[i][j]]++;} }
+      printf("Frequency for slogan %d: \n{", i+1);   
+      for(int k=0 ; k<256 ; k++)
+         {if(freq[k] > 0)
+            {printf("\'%c\': %d, ", k, freq[k]);} }
+      printf("}\n"); }
+  return 0;
+}

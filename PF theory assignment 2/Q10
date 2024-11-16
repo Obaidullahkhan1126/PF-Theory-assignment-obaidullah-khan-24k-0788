@@ -1,0 +1,116 @@
+#include <stdio.h>
+
+void drawPattern(int size);
+
+int main() {
+    int input;
+
+    printf("Enter a number: ");
+    scanf("%d", &input);
+
+    if (input % 2 == 0) {
+        printf("Invalid Number.\n");
+        return 1;
+    }
+
+    drawPattern(input);
+
+    return 0;
+}
+
+void drawPattern(int size) {
+    int row, col, leftSpace, middleSpace;
+    int outerSpace = size + size - 2;
+    int innerSpace = 0;
+
+    for (row = 0; row < size - 1; row++) {
+        for (col = outerSpace; col > 0; col--) {
+            printf(" ");
+        }
+        printf("*");
+
+        for (col = innerSpace - 1; col > 0; col--) {
+            printf(" ");
+            if (col == 1) {
+                printf("*");
+            }
+        }
+
+        printf("\n");
+        outerSpace--;
+        innerSpace += 2;
+    }
+
+    for (col = 0; col < size; col++) {
+        printf("*");
+    }
+
+    for (col = innerSpace - 1; col > 0; col--) {
+        printf(" ");
+    }
+
+    for (col = 0; col < size; col++) {
+        printf("*");
+    }
+    printf("\n");
+
+    outerSpace = 0;
+    int lineSpace = size + size + innerSpace - 3;
+
+    for (row = 0; row < size - 1; row++) {
+        for (col = outerSpace + 1; col > 0; col--) {
+            printf(" ");
+        }
+
+        printf("*");
+
+        for (col = lineSpace - 2; col > 0; col--) {
+            printf(" ");
+        }
+
+        printf("*\n");
+        outerSpace++;
+        lineSpace -= 2;
+    }
+
+    int midSpace = 1;
+    int rightSpace = outerSpace;
+
+    for (row = 0; row < size - 1; row++) {
+        for (col = outerSpace - 1; col > 0; col--) {
+            printf(" ");
+        }
+
+        printf("*");
+
+        for (col = size - 2; col > 0; col--) {
+            printf(" ");
+            if (col == 1) {
+                printf("*");
+            }
+        }
+
+        for (col = midSpace; col > 0; col--) {
+            printf(" ");
+        }
+
+        if (row == size - 2) {
+            printf("  ");
+        }
+
+        printf("*");
+
+        for (col = rightSpace - 1; col > 0; col--) {
+            printf(" ");
+            if (col == 1) {
+                printf("*");
+            }
+        }
+
+        printf("\n");
+        outerSpace--;
+        size--;
+        midSpace += 4;
+        rightSpace--;
+    }
+}

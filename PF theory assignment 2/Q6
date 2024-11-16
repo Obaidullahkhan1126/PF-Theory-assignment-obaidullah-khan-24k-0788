@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int calculatePick(int sticks) {
+    if (sticks <= 0 || sticks % 5 == 0) {
+        return -1;
+    } else {
+        return sticks % 5;
+    }
+}
+
+int main() {
+    int totalSticks;
+    printf("Enter the number of matchsticks: ");
+    scanf("%d", &totalSticks);
+
+    int pick = calculatePick(totalSticks);
+    if (pick == -1) {
+        printf("It is impossible for A to win.\n");
+    } else {
+        printf("A should pick %d matchsticks.\n", pick);
+    }
+
+    return 0;
+}

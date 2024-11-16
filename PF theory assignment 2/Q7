@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <string.h>
+
+void fillMatrix(char matrix[6][5]) {
+    for (int row = 0; row < 4; row++) {
+        for (int col = 0; col < 5; col++) {
+            printf("Enter character [%d][%d]: ", row, col);
+            scanf(" %c", &matrix[row][col]);
+        }
+    }
+    matrix[4][0] = '0';
+    matrix[4][1] = '9';
+    matrix[4][2] = '5';
+    matrix[4][3] = '2';
+    matrix[4][4] = 'i';
+}
+
+int searchString(char matrix[6][5], char word[]) {
+    int wordLen = strlen(word);
+    
+    for (int row = 0; row < 6; row++) {
+        for (int col = 0; col <= 5 - wordLen; col++) {
+            int match = 1;
+            for (int k = 0; k < wordLen; k++) {
+                if (matrix[row][col + k] != word[k]) {
+                    match = 0;
+                    break;
+                }
+            }
+            if (match) {
+                return 1;
+            }
+        }
+    }
+
+    for (int col = 0; col < 5; col++) {
+        for (int row = 0; row <= 6 - wordLen; row++) {
+            int match = 1;
+            for (int k = 0; k < wordLen; k++) {
+                if (matrix[row + k][col] != word[k]) {
+                    match = 0;
+                    break;
+                }
+            }
+            if (match) {
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int main() {
+    char matrix[6][5];
+    int totalScore = 0;
+    char searchWord[20];
+
+    fillMatrix(matrix);
+
+    for (int row = 0; row < 6; row++) {
+        printf("|");
+        for (int col = 0; col < 5; col++) {
+            printf("%c|", matrix[row][col]);
+        }
+        printf("\n");
+    }
+
+    while (1) {
+        printf("Find string or Enter 'x' to stop: ");
+        scanf("%s", searchWord);
+
+        if (strcmp(searchWord, "x") == 0) {
+            break;
+        }
+
+        if (searchString(matrix, searchWord)) {
+            printf("%s is present\n", searchWord);
+            totalScore++;
+        } else {
+            printf("%s is not present\n", searchWord);
+            totalScore--;
+        }
+
+        printf("Score: %d\n", totalScore);
+    }
+
+    printf("Total Score: %d\n", totalScore);
+
+    return 0;
+}

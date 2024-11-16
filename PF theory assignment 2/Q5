@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+void drawHorizontalBars(int nums[], int length) {
+    printf("\nHorizontal Histogram:\n");
+    for (int x = 0; x < length; x++) {
+        printf("%d ", nums[x]);
+        for (int y = 0; y < nums[x]; y++) {
+            printf("*");
+        }
+        printf("\n");
+    }
+}
+
+void drawVerticalBars(int nums[], int length) {
+    printf("\nVertical Histogram:\n");
+    int highest = nums[0];
+    for (int x = 1; x < length; x++) {
+        if (nums[x] > highest) {
+            highest = nums[x];
+        }
+    }
+    for (int row = highest; row > 0; row--) {
+        for (int col = 0; col < length; col++) {
+            if (nums[col] >= row) {
+                printf("* ");
+            } else {
+                printf("  ");
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+    for (int x = 0; x < length; x++) {
+        printf("%d ", nums[x]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int total;
+    printf("Enter the number of values: ");
+    scanf("%d", &total);
+    
+    int data[total];
+    printf("Enter %d integers:\n", total);
+    for (int x = 0; x < total; x++) {
+        scanf("%d", &data[x]);
+    }
+
+    drawHorizontalBars(data, total);
+    drawVerticalBars(data, total);
+
+    return 0;
+}

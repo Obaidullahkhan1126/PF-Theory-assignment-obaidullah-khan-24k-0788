@@ -1,0 +1,128 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MIN_SCORE 1
+#define MAX_SCORE 10
+
+typedef struct {
+    int* evaluations;
+    int totalPoints;
+} Staff;
+
+void gatherRatings(Staff* staffList, int totalStaff, int totalPeriods) {
+    for (int i = 0; i < totalStaff; i++) {
+        printf("Enter ratings for Staff %d (between %d-%d):\n", i + 1, MIN_SCORE, MAX_SCORE);
+        staffList[i].evaluations = (int*)malloc(totalPeriods * sizeof(int));
+
+        for (int j = 0; j < totalPeriods; j++) {
+            do {
+                printf("  Period %d: ", j + 1);
+                scanf("%d", &staffList[i].evaluations[j]);
+
+                if (staffList[i].evaluations[j] < MIN_SCORE || staffList[i].evaluations[j] > MAX_SCORE) {
+                    printf("Invalid score! Please enter a score between %d and %d.\n", MIN_SCORE, MAX_SCORE);
+                }
+            } while (staffList[i].evaluations[j] < MIN_SCORE || staffList[i].evaluations[j] > MAX_SCORE);
+        }
+    }
+}
+
+void displayRatings(Staff* staffList, int totalStaff, int totalPeriods) {
+    printf("Performance Ratings:\n");
+    for (int i = 0; i < totalStaff; i++) {
+        printf("Staff %d: ", i + 1);
+        for (int j = 0; j < totalPeriods; j++) {
+            printf("%d ", staffList[i].evaluations[j]);
+        }
+        printf("\n");
+    }
+}
+
+int topPerformer(Staff* staffList, int totalStaff, int totalPeriods) {
+    int topIndex = 0;
+    double highestAverage = 0.0;
+
+    for (int i = 0; i < totalStaff; i++) {
+        double total = 0.0;
+        for (int j = 0; j < totalPeriods; j++) {
+            total += staffList[i].evaluations[j];
+        }
+        double average = total / totalPeriods;
+        if (average > highestAverage) {
+            highestAverage = average;
+            topIndex = i;
+        }
+    }
+    return topIndex;
+}
+
+int bestPeriod(Staff* staffList, int totalStaff, int totalPeriods) {
+    int topPeriod = 0;
+    double highestAverage = 0.0;
+
+    for (int j = 0; j < totalPeriods; j++) {
+        double total = 0.0;
+        for (int i = 0; i < totalStaff; i++) {
+            total += staffList[i].evaluations[j];
+        }
+        double average = total / totalStaff;
+        if (average > highestAverage) {
+            highestAverage = average;
+            topPeriod = j;
+        }
+    }
+    return topPeriod;
+}
+
+int leastPerformer(Staff* staffList, int totalStaff, int totalPeriods) {
+    int lowIndex = 0;
+    double lowestAverage = MAX_SCORE;
+
+    for (int i = 0; i < totalStaff; i++) {
+        double total = 0.0;
+        for (int j = 0; j < totalPeriods; j++) {
+            total += staffList[i].evaluations[j];
+        }
+        double average = total / totalPeriods;
+        if (average < lowestAverage) {
+            lowestAverage = average;
+            lowIndex = i;
+        }
+    }
+    return lowIndex;
+}
+
+void releaseMemory(Staff* staffList, int totalStaff) {
+    for (int i = 0; i < totalStaff; i++) {
+        free(staffList[i].evaluations);
+    }
+}
+
+int main() {
+    int totalStaff, totalPeriods;
+
+    printf("Enter the number of staff members: ");
+    scanf("%d", &totalStaff);
+
+    printf("Enter the number of evaluation periods: ");
+    scanf("%d", &totalPeriods);
+
+    Staff* staffList = (Staff*)malloc(totalStaff * sizeof(Staff));
+
+    gatherRatings(staffList, totalStaff, totalPeriods);
+    displayRatings(staffList, totalStaff, totalPeriods);
+
+    int bestStaff = topPerformer(staffList, totalStaff, totalPeriods);
+    printf("\nTop Performer: Staff %d\n", bestStaff + 1);
+
+    int topEvaluationPeriod = bestPeriod(staffList, totalStaff, totalPeriods);
+    printf("Best Evaluation Period: Period %d\n", topEvaluationPeriod + 1);
+
+    int weakestStaff = leastPerformer(staffList, totalStaff, totalPeriods);
+    printf("Least Performer: Staff %d\n", weakestStaff + 1);
+
+    releaseMemory(staffList, totalStaff);
+    free(staffList);
+
+    return 0;
+}

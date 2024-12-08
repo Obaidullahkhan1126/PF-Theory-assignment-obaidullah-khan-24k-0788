@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <string.h>
+
+struct Contestant {
+    int scores[12];
+    char name[50];
+    int total;
+};
+
+int validateInput(int input) {
+    if (input >= 0 && input <= 6) {
+        return input;
+    }
+    return -1;
+}
+
+void playRound(struct Contestant* participant) {
+    int input;
+
+    for (int i = 0; i < 12; i++) {
+        printf("%s, Enter score for ball %d (0-6): ", participant->name, i + 1);
+        scanf("%d", &input);
+
+        input = validateInput(input);
+        if (input != -1) {
+            participant->scores[i] = input;
+        } else {
+            printf("Invalid input! Ball %d will be marked as 0.\n", i + 1);
+            participant->scores[i] = 0;
+        }
+    }
+}
+
+void computeTotal(struct Contestant* participant) {
+    participant->total = 0;
+    for (int i = 0; i < 12; i++) {
+        participant->total += participant->scores[i];
+    }
+}
+
+void determineWinner(struct Contestant contestant1, struct Contestant contestant2) {
+    printf("Final Scores\n");
+    printf("%s: %d\n", contestant1.name, contestant1.total);
+    printf("%s: %d\n", contestant2.name, contestant2.total);
+
+    if (contestant1.total > contestant2.total) {
+        printf("\nWinner: %s\n", contestant1.name);
+    } else if (contestant1.total < contestant2.total) {
+        printf("Winner: %s\n", contestant2.name);
+    } else {
+        printf("It's a Tie!\n");
+    }
+}
+
+void displaySummary(struct Contestant contestant1, struct Contestant contestant2) {
+    printf("Match Summary:\n");
+
+    printf("%s's Performance:\n", contestant1.name);
+    printf("Scores: ");
+    for (int i = 0; i < 12; i++) {
+        printf("%d ", contestant1.scores[i]);
+    }
+    printf("\nTotal: %d\n", contestant1.total);
+    printf("Average: %.2f\n", contestant1.total / 12.0);
+
+    printf("\n%s's Performance:\n", contestant2.name);
+    printf("Scores: ");
+    for (int i = 0; i < 12; i++) {
+        printf("%d ", contestant2.scores[i]);
+    }
+    printf("\nTotal: %d\n", contestant2.total);
+    printf("Average: %.2f\n", contestant2.total / 12.0);
+}
+
+int main() {
+    struct Contestant contestant1, contestant2;
+
+    printf("Enter name of Contestant 1: ");
+    scanf(" %[^]", contestant1.name);
+    printf("Enter name of Contestant 2: ");
+    scanf(" %[^]", contestant2.name);
+
+    playRound(&contestant1);
+    playRound(&contestant2);
+
+    computeTotal(&contestant1);
+    computeTotal(&contestant2);
+
+    displaySummary(contestant1, contestant2);
+
+    determineWinner(contestant1, contestant2);
+
+    return 0;
+}

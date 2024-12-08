@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    float temp;
+    float rain;
+    float wind;
+} Weather;
+
+typedef struct {
+    char type[50];
+    int stage;
+    float yield;
+    Weather *forecast;
+} Crop;
+
+typedef struct {
+    float health;
+    float moisture;
+    float pH;
+    float nutrients;
+    struct Sensor *next;
+} Sensor;
+
+typedef struct {
+    char type[50];
+    int status;
+    float fuel;
+    char schedule[100];
+} Equipment;
+
+typedef struct {
+    float lat;
+    float lon;
+    float alt;
+    Sensor *sensor;
+    Crop *crop;
+    Equipment *equipment;
+} Plot;
+
+typedef struct {
+    Plot *plots;
+    int totalPlots;
+    float yieldPrediction;
+    float resourceUtilization;
+    char emergencyPlan[200];
+} Hub;
+
+typedef struct {
+    Hub *hubs;
+    int totalHubs;
+} Server;
+
+void initWeather(Weather *w, float t, float r, float ws);
+void initCrop(Crop *c, const char *t, int s, float y, Weather *w);
+void initSensor(Sensor *s, float h, float m, float p, float n);
+void initEquipment(Equipment *e, const char *t, int s, float f, const char *sch);
+void initPlot(Plot *p, float lat, float lon, float alt, Sensor *s, Crop *c, Equipment *e);
+void initHub(Hub *h, Plot *p, int tp);
+void initServer(Server *s, Hub *h, int th);
+void releaseMemory(Server *s);
+
+int main() {
+    Weather w;
+    initWeather(&w, 27.5, 135.0, 11.0);
+
+    Crop c;
+    initCrop(&c, "Rice", 2, 600.0, &w);
+
+    Sensor s;
+    initSensor(&s, 85.0, 50.0, 6.2, 50.0);
+
+    Equipment e;
+    initEquipment(&e, "Tractor", 1, 80.0, "Daily");
+
+    Plot p;
+    initPlot(&p, 25.276987, 55.296249, 15.0, &s, &c, &e);
+
+    Plot plots[1] = {p};
+    Hub h;
+    initHub(&h, plots, 1);
+
+    Hub hubs[1] = {h};
+    Server srv;
+    initServer(&srv, hubs, 1);
+
+    printf("Plot at (%.2f, %.2f) with Crop: %s, Stage: %d\n", p.lat, p.lon, p.crop->type, p.crop->stage);
+
+    releaseMemory(&srv);
+
+    return 0;
+}
+
+void initWeather(Weather *w, float t, float r, float ws) {
+    w->temp = t;
+    w->rain = r;
+    w->wind = ws;
+}
+
+void initCrop(Crop *c, const char *t, int s, float y, Weather *w) {
+    strcpy(c->type, t);
+    c->stage = s;
+    c->yield = y;
+    c->forecast = w;
+}
+
+void initSensor(Sensor *s, float h, float m, float p, float n) {
+    s->health = h;
+    s->moisture = m;
+    s->pH = p;
+    s->nutrients = n;
+}
+
+void initEquipment(Equipment *e, const char *t, int s, float f, const char *sch) {
+    strcpy(e->type, t);
+    e->status = s;
+    e->fuel = f;
+    strcpy(e->schedule, sch);
+}
+
+void initPlot(Plot *p, float lat, float lon, float alt, Sensor *s, Crop *c, Equipment *e) {
+    p->lat = lat;
+    p->lon = lon;
+    p->alt = alt;
+    p->sensor = s;
+    p->crop = c;
+    p->equipment = e;
+}
+
+void initHub(Hub *h, Plot *p, int tp) {
+    h->plots = p;
+    h->totalPlots = tp;
+    h->yieldPrediction = 5000.0;
+    h->resourceUtilization = 75.0;
+    strcpy(h->emergencyPlan, "Plan to irrigate, deploy drones, and call emergency services.");
+}
+
+void initServer(Server *s, Hub *h, int th) {
+    s->hubs = h;
+    s->totalHubs = th;
+}
+
+void releaseMemory(Server *s) {
+    for (int i = 0; i < s->totalHubs; i++) {
+        for (int j = 0; j < s->hubs[i].totalPlots; j++) {
+            free(s->hubs[i].plots[j].sensor);
+            free(s->hubs[i].plots[j].crop->forecast);
+            free(s->hubs[i].plots[j].crop);
+            free(s->hubs[i].plots[j].equipment);
+        }
+    }
+    free(s->hubs);
+}

@@ -1,1 +1,65 @@
+#include <stdio.h>
+#include <string.h>
 
+struct Staff {
+    int id;
+    char name[50];
+    int joiningDate[3];
+};
+
+void inputDetails(struct Staff* member) {
+    printf("Enter ID: ");
+    scanf("%d", &member->id);
+    printf("Enter Name: ");
+    scanf(" %[^
+]", member->name);
+    printf("Enter Joining Date (dd mm yyyy): ");
+    scanf("%d %d %d", &member->joiningDate[0], &member->joiningDate[1], &member->joiningDate[2]);
+}
+
+void evaluateTenure(struct Staff members[], int count) {
+    int current[3];
+    int eligibleCount = 0;
+
+    printf("Enter Current Date (dd mm yyyy): ");
+    scanf("%d %d %d", &current[0], &current[1], &current[2]);
+
+    printf("Staff with tenure greater than 3 years:\n");
+    printf("ID\tName\t\tJoining Date\n");
+    printf("-----------------------------------------\n");
+
+    for (int i = 0; i < count; i++) {
+        int years = current[2] - members[i].joiningDate[2];
+        int months = current[1] - members[i].joiningDate[1];
+        int days = current[0] - members[i].joiningDate[0];
+
+        if (months < 0 || (months == 0 && days < 0)) {
+            years--;
+        }
+
+        if (years > 3) {
+            printf("%d\t%s\t\t%d-%d-%d\n", 
+                   members[i].id, 
+                   members[i].name, 
+                   members[i].joiningDate[0], 
+                   members[i].joiningDate[1], 
+                   members[i].joiningDate[2]);
+            eligibleCount++;
+        }
+    }
+
+    printf("\nTotal Staff with tenure greater than 3 years: %d\n", eligibleCount);
+}
+
+int main() {
+    struct Staff members[4];
+
+    for (int i = 0; i < 4; i++) {
+        printf("Enter details for Staff %d\n", i + 1);
+        inputDetails(&members[i]);
+    }
+
+    evaluateTenure(members, 4);
+
+    return 0;
+}

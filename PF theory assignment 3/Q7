@@ -1,0 +1,145 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TOTAL_USERS 5
+#define TOTAL_CATEGORIES 3
+#define TOTAL_DEVICES 3
+#define TOTAL_CONTENT 4
+
+typedef struct {
+    char name[50];
+    float score;
+    int duration;
+    char format[20];
+} MediaDetails;
+
+typedef struct {
+    int displayResolution;
+    int watchHistory;
+    int dataUsage;
+} DeviceSettings;
+
+double** allocateEngagementMatrix(int users, int categories) {
+    double** matrix = (double**)malloc(users * sizeof(double*));
+    for (int i = 0; i < users; i++) {
+        matrix[i] = (double*)malloc(categories * sizeof(double));
+    }
+    return matrix;
+}
+
+DeviceSettings*** allocateDeviceMatrix(int users, int devices) {
+    DeviceSettings*** matrix = (DeviceSettings***)malloc(users * sizeof(DeviceSettings**));
+    for (int i = 0; i < users; i++) {
+        matrix[i] = (DeviceSettings**)malloc(devices * sizeof(DeviceSettings*));
+        for (int j = 0; j < devices; j++) {
+            matrix[i][j] = (DeviceSettings*)malloc(sizeof(DeviceSettings));
+        }
+    }
+    return matrix;
+}
+
+MediaDetails*** allocateMediaMatrix(int categories, int content) {
+    MediaDetails*** matrix = (MediaDetails***)malloc(categories * sizeof(MediaDetails**));
+    for (int i = 0; i < categories; i++) {
+        matrix[i] = (MediaDetails**)malloc(content * sizeof(MediaDetails*));
+        for (int j = 0; j < content; j++) {
+            matrix[i][j] = (MediaDetails*)malloc(sizeof(MediaDetails));
+        }
+    }
+    return matrix;
+}
+
+void initializeEngagementMatrix(double** matrix, int users, int categories) {
+    for (int i = 0; i < users; i++) {
+        for (int j = 0; j < categories; j++) {
+            matrix[i][j] = (i + 1) * (j + 1);
+        }
+    }
+}
+
+void initializeDeviceMatrix(DeviceSettings*** matrix, int users, int devices) {
+    for (int i = 0; i < users; i++) {
+        for (int j = 0; j < devices; j++) {
+            matrix[i][j]->displayResolution = (j + 1) * 720;
+            matrix[i][j]->watchHistory = 0;
+            matrix[i][j]->dataUsage = 1000;
+        }
+    }
+}
+
+void initializeMediaMatrix(MediaDetails*** matrix, int categories, int content) {
+    for (int i = 0; i < categories; i++) {
+        for (int j = 0; j < content; j++) {
+            snprintf(matrix[i][j]->name, sizeof(matrix[i][j]->name), "Media %d-%d", i + 1, j + 1);
+            matrix[i][j]->score = 4.5;
+            matrix[i][j]->duration = 120;
+            snprintf(matrix[i][j]->format, sizeof(matrix[i][j]->format), "H.264");
+        }
+    }
+}
+
+void displayEngagementMatrix(double** matrix, int users, int categories) {
+    printf("Engagement Matrix:\n");
+    for (int i = 0; i < users; i++) {
+        for (int j = 0; j < categories; j++) {
+            printf("%.2f ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void displayDeviceMatrix(DeviceSettings*** matrix, int users, int devices) {
+    printf("\nDevice Settings Matrix:\n");
+    for (int i = 0; i < users; i++) {
+        for (int j = 0; j < devices; j++) {
+            printf("User %d, Device %d - Resolution: %d, History: %d, Data: %d KB\n", i + 1, j + 1, matrix[i][j]->displayResolution, matrix[i][j]->watchHistory, matrix[i][j]->dataUsage);
+        }
+    }
+}
+
+void displayMediaMatrix(MediaDetails*** matrix, int categories, int content) {
+    printf("\nMedia Details Matrix:\n");
+    for (int i = 0; i < categories; i++) {
+        for (int j = 0; j < content; j++) {
+            printf("Category %d, Content %d - Name: %s, Score: %.1f, Duration: %d min, Format: %s\n", i + 1, j + 1, matrix[i][j]->name, matrix[i][j]->score, matrix[i][j]->duration, matrix[i][j]->format);
+        }
+    }
+}
+
+int main() {
+    double** engagementMatrix = allocateEngagementMatrix(TOTAL_USERS, TOTAL_CATEGORIES);
+    DeviceSettings*** deviceMatrix = allocateDeviceMatrix(TOTAL_USERS, TOTAL_DEVICES);
+    MediaDetails*** mediaMatrix = allocateMediaMatrix(TOTAL_CATEGORIES, TOTAL_CONTENT);
+
+    initializeEngagementMatrix(engagementMatrix, TOTAL_USERS, TOTAL_CATEGORIES);
+    initializeDeviceMatrix(deviceMatrix, TOTAL_USERS, TOTAL_DEVICES);
+    initializeMediaMatrix(mediaMatrix, TOTAL_CATEGORIES, TOTAL_CONTENT);
+
+    displayEngagementMatrix(engagementMatrix, TOTAL_USERS, TOTAL_CATEGORIES);
+    displayDeviceMatrix(deviceMatrix, TOTAL_USERS, TOTAL_DEVICES);
+    displayMediaMatrix(mediaMatrix, TOTAL_CATEGORIES, TOTAL_CONTENT);
+
+    for (int i = 0; i < TOTAL_USERS; i++) {
+        free(engagementMatrix[i]);
+    }
+    free(engagementMatrix);
+
+    for (int i = 0; i < TOTAL_USERS; i++) {
+        for (int j = 0; j < TOTAL_DEVICES; j++) {
+            free(deviceMatrix[i][j]);
+        }
+        free(deviceMatrix[i]);
+    }
+    free(deviceMatrix);
+
+    for (int i = 0; i < TOTAL_CATEGORIES; i++) {
+        for (int j = 0; j < TOTAL_CONTENT; j++) {
+            free(mediaMatrix[i][j]);
+        }
+        free(mediaMatrix[i]);
+    }
+    free(mediaMatrix);
+
+    return 0;
+}

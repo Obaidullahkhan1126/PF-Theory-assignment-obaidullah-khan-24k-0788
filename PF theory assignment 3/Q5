@@ -1,0 +1,170 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_ITEMS 10
+
+void addItem(char*** inventory, int entityCount, int entityIndex, int* itemCount) {
+    char item[100];
+    printf("Enter an item: ");
+    fgets(item, sizeof(item), stdin);
+    item[strcspn(item, "\n")] = '\0';
+
+    if (*itemCount < MAX_ITEMS) {
+        inventory[entityIndex] = realloc(inventory[entityIndex], (*itemCount + 1) * sizeof(char*));
+        inventory[entityIndex][*itemCount] = malloc((strlen(item) + 1) * sizeof(char));
+        strcpy(inventory[entityIndex][*itemCount], item);
+        (*itemCount)++;
+    } else {
+        printf("Maximum items reached for this entity.\n");
+    }
+}
+
+void updateItem(char** inventory, int itemIndex) {
+    char newItem[100];
+    printf("Enter the new item name: ");
+    fgets(newItem, sizeof(newItem), stdin);
+    newItem[strcspn(newItem, "\n")] = '\0';
+
+    free(inventory[itemIndex]);
+    inventory[itemIndex] = malloc((strlen(newItem) + 1) * sizeof(char));
+    strcpy(inventory[itemIndex], newItem);
+}
+
+void removeEntity(char*** inventory, int* entityCount, int entityIndex, int* itemCounts) {
+    for (int i = 0; i < itemCounts[entityIndex]; i++) {
+        free(inventory[entityIndex][i]);
+    }
+    free(inventory[entityIndex]);
+
+    for (int i = entityIndex; i < *entityCount - 1; i++) {
+        inventory[i] = inventory[i + 1];
+        itemCounts[i] = itemCounts[i + 1];
+    }
+
+    (*entityCount)--;
+}
+
+void displayInventory(char*** inventory, int entityCount, char** entityNames, int* itemCounts) {
+    printf("\nInventory:\n");
+    for (int i = 0; i < entityCount; i++) {
+        printf("%s:\n", entityNames[i]);
+        for (int j = 0; j < itemCounts[i]; j++) {
+            printf("  %d. %s\n", j + 1, inventory[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int entityCount = 0;
+    int maxEntities = 10;
+    int* itemCounts = malloc(maxEntities * sizeof(int));
+    char*** inventory = malloc(maxEntities * sizeof(char**));
+    char** entityNames = malloc(maxEntities * sizeof(char*));
+
+    int option;
+    do {
+        printf("Menu:\n");
+        printf("1. Add Entity\n");
+        printf("2. Add Item\n");
+        printf("3. Update Item\n");
+        printf("4. Remove Entity\n");
+        printf("5. Display Inventory\n");
+        printf("6. Exit\n");
+        printf("Enter your option: ");
+        scanf("%d", &option);
+        getchar();
+
+        switch (option) {
+            case 1: {
+                if (entityCount < maxEntities) {
+                    char entityName[100];
+                    printf("Enter entity name: ");
+                    fgets(entityName, sizeof(entityName), stdin);
+                    entityName[strcspn(entityName, "\n")] = '\0';
+
+                    entityNames[entityCount] = malloc((strlen(entityName) + 1) * sizeof(char));
+                    strcpy(entityNames[entityCount], entityName);
+
+                    inventory[entityCount] = NULL;
+                    itemCounts[entityCount] = 0;
+                    entityCount++;
+                } else {
+                    printf("Maximum entities reached.\n");
+                }
+                break;
+            }
+
+            case 2: {
+                int entityIndex;
+                printf("Enter entity index (0 to %d): ", entityCount - 1);
+                scanf("%d", &entityIndex);
+                getchar();
+
+                if (entityIndex >= 0 && entityIndex < entityCount) {
+                    addItem(inventory, entityCount, entityIndex, &itemCounts[entityIndex]);
+                } else {
+                    printf("Invalid entity index.\n");
+                }
+                break;
+            }
+
+            case 3: {
+                int entityIndex, itemIndex;
+                printf("Enter entity index (0 to %d): ", entityCount - 1);
+                scanf("%d", &entityIndex);
+                printf("Enter item index (0 to %d): ", itemCounts[entityIndex] - 1);
+                scanf("%d", &itemIndex);
+                getchar();
+
+                if (entityIndex >= 0 && entityIndex < entityCount && itemIndex >= 0 && itemIndex < itemCounts[entityIndex]) {
+                    updateItem(inventory[entityIndex], itemIndex);
+                } else {
+                    printf("Invalid entity or item index.\n");
+                }
+                break;
+            }
+
+            case 4: {
+                int entityIndex;
+                printf("Enter entity index (0 to %d): ", entityCount - 1);
+                scanf("%d", &entityIndex);
+                getchar();
+
+                if (entityIndex >= 0 && entityIndex < entityCount) {
+                    removeEntity(inventory, &entityCount, entityIndex, itemCounts);
+                    printf("Entity removed successfully.\n");
+                } else {
+                    printf("Invalid entity index.\n");
+                }
+                break;
+            }
+
+            case 5:
+                displayInventory(inventory, entityCount, entityNames, itemCounts);
+                break;
+
+            case 6:
+                printf("Exiting the program.\n");
+                break;
+
+            default:
+                printf("Invalid option. Please try again.\n");
+        }
+    } while (option != 6);
+
+    for (int i = 0; i < entityCount; i++) {
+        free(entityNames[i]);
+        for (int j = 0; j < itemCounts[i]; j++) {
+            free(inventory[i][j]);
+        }
+        free(inventory[i]);
+    }
+
+    free(entityNames);
+    free(inventory);
+    free(itemCounts);
+
+    return 0;
+}
